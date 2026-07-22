@@ -1,9 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
-import { AppError } from '../utils/AppError.js';
-import { HTTP_STATUS } from '../constants/httpStatusCodes.js';
-import { env } from '../config/env.config.js';
-import { logger } from '../utils/logger.js';
+import { AppError } from '../utils/AppError';
+import { HTTP_STATUS } from '../constants/httpStatusCodes';
+import { env } from '../config/env.config';
+import { logger } from '../utils/logger';
+
+interface MongoError {
+  code?: number;
+  stack?: string;
+}
 
 export const errorHandler = (
   err: unknown,
@@ -23,6 +28,10 @@ export const errorHandler = (
     statusCode = HTTP_STATUS.BAD_REQUEST;
     message = 'Validation Error: ' + err.issues.map((issue) => issue.message).join(', ');
     stack = err.stack;
+  } else if (typeof err === 'object' && err !== null && ('code' in err) && (err as MongoError).code === 11000) {
+    statusCode = HTTP_STATUS.CONFLICT;
+    message = 'Email already registered';
+    stack = (err as MongoError).stack;
   } else if (err instanceof Error) {
     message = err.message;
     stack = err.stack;

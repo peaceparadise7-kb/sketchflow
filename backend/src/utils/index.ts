@@ -1,3 +1,3 @@
-export * from './AppError.js';
-export * from './asyncHandler.js';
-export * from './logger.js';
+export * from './AppError';
+export * from './asyncHandler';
+export * from './logger';

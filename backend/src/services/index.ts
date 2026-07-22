@@ -1,1 +1,2 @@
-export * from './health.service.js';
+export * from './health.service';
+export * from './auth.service';

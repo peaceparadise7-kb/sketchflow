@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
-import { AppEnvConfig } from '../types/index.js';
-import { logger } from '../utils/logger.js';
+import { AppEnvConfig } from '../types/index';
+import { logger } from '../utils/logger';
 
 dotenv.config();
 

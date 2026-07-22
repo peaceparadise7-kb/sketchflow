@@ -1,1 +1,1 @@
-export * from './httpStatusCodes.js';
+export * from './httpStatusCodes';

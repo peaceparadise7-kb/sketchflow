@@ -1,13 +1,25 @@
-// Shared generic application types and models
 export interface ApiResponse<T = unknown> {
   success: boolean;
-  data?: T;
   message?: string;
-  error?: string;
+  data?: T;
+  error?: {
+    message: string;
+    statusCode: number;
+    stack?: string;
+  };
+  requestId?: string;
+  timestamp?: string;
 }
 
 export interface User {
   id: string;
   email: string;
   name: string;
+  createdAt?: string;
+}
+
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
 }

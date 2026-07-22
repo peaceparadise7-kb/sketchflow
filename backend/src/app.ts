@@ -2,8 +2,8 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import routes from './routes/index.js';
-import { notFoundHandler, errorHandler, requestIdMiddleware } from './middleware/index.js';
+import routes from './routes/index';
+import { notFoundHandler, errorHandler, requestIdMiddleware } from './middleware/index';
 
 const app: Application = express();
 
