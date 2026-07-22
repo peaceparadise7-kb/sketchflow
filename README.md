@@ -1,6 +1,6 @@
 # SketchFlow
 
-SketchFlow is a production-grade full-stack collaborative visual platform workspace foundation.
+SketchFlow is a production-grade full-stack collaborative visual platform designed for engineering teams to diagram distributed systems, map user flows, and transform complex architecture ideas into clear visual specifications.
 
 ---
 
@@ -17,7 +17,54 @@ SketchFlow is a production-grade full-stack collaborative visual platform worksp
 - **Runtime**: Node.js + Express
 - **Language**: TypeScript
 - **Database**: MongoDB via Mongoose
-- **Security & Utilities**: Helmet, CORS, Morgan, Zod, Custom Error Handler, Logger
+- **Validation & Security**: Zod, bcryptjs, Helmet, CORS, Morgan
+- **Infrastructure**: Custom AppError, Request ID Tracking Middleware, Timestamped Logger
+
+---
+
+## Implemented Features
+
+- [x] **Production Architecture**: Layered, SRP-compliant frontend and backend structure with path aliases (`@/`).
+- [x] **Landing Page**: Modern developer-oriented landing page featuring Hero, CSS/HTML Mock Whiteboard, Features, CTA, and Footer.
+- [x] **User Registration**: End-to-end user registration flow with Mongoose schema, bcrypt password hashing, and Zod input validation.
+- [x] **Duplicate Handling**: Graceful 409 Conflict responses for existing email registrations and MongoDB E11000 duplicate keys.
+- [x] **Environment Validation**: Strict fail-fast environment variable validation using Zod schemas.
+- [x] **Global Error Pipeline**: Request correlation via `X-Request-Id` and sanitized error payloads (stack traces hidden in production).
+
+---
+
+## Page Screenshots
+
+### Landing Page
+> Screenshot coming soon
+
+### Registration Page
+> Screenshot coming soon
+
+---
+
+## API Documentation
+
+### System Health
+`GET /api/v1/health`
+- **Purpose**: Verifies operational backend server status.
+- **Response**: `200 OK`
+
+### User Registration
+`POST /api/v1/auth/register`
+- **Purpose**: Registers a new user account.
+- **Payload**:
+  ```json
+  {
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "Password123!"
+  }
+  ```
+- **Responses**:
+  - `201 Created`: Registration successful.
+  - `400 Bad Request`: Validation failure (name/email/password rules).
+  - `409 Conflict`: Email already registered.
 
 ---
 
@@ -27,26 +74,31 @@ SketchFlow is a production-grade full-stack collaborative visual platform worksp
 sketchflow/
 ├── frontend/
 │   ├── src/
-│   │   ├── api/          # Axios client setup
-│   │   ├── components/   # UI & Layout components
-│   │   ├── constants/    # Route & app constants
-│   │   ├── pages/        # Route page views
-│   │   ├── providers/    # App context providers
-│   │   ├── routes/       # Centralized route definitions
-│   │   ├── types/        # TypeScript models & types
-│   │   └── utils/        # Pure helper utilities
+│   │   ├── api/          # Axios client setup & interceptors
+│   │   ├── components/   # Layout & Landing subcomponents
+│   │   │   ├── landing/  # Hero, MockBoard, FeatureCard, Features, CTA, Footer
+│   │   │   └── layout/   # MainLayout & Navbar
+│   │   ├── constants/    # Route constants (ROUTES)
+│   │   ├── pages/        # Landing, Register, Login, Dashboard, Board, NotFound
+│   │   ├── providers/    # App context providers wrapper
+│   │   ├── routes/       # Centralized route table (AppRoutes.tsx)
+│   │   ├── services/     # Auth API integration services
+│   │   ├── types/        # TypeScript interfaces & API response models
+│   │   └── utils/        # Utility helper functions
 │   ├── package.json
 │   └── vite.config.ts
 └── backend/
     ├── src/
-    │   ├── config/       # Database & Zod env validation
+    │   ├── config/       # Database connection & Zod env validation
     │   ├── constants/    # HTTP status codes
-    │   ├── controllers/  # Request handlers
-    │   ├── middleware/   # Request ID, Error, 404 middleware
+    │   ├── controllers/  # Thin request handlers (health, auth)
+    │   ├── middleware/   # Request ID, Error handler, 404 handler
+    │   ├── models/       # Mongoose data schemas (User)
     │   ├── routes/       # Versioned API endpoints (/api/v1/)
-    │   ├── services/     # Core domain business logic
-    │   ├── types/        # TypeScript module declarations & types
-    │   └── utils/        # Logger & AppError utilities
+    │   ├── services/     # Domain business logic (auth, health)
+    │   ├── types/        # Custom Express declarations & backend types
+    │   ├── utils/        # AppError, asyncHandler, Logger utilities
+    │   └── validators/   # Zod payload validation schemas (registerSchema)
     ├── package.json
     └── tsconfig.json
 ```
@@ -84,9 +136,13 @@ cp frontend/.env.example frontend/.env
 cp backend/.env.example backend/.env
 ```
 
-Ensure environment variables are configured:
-- `frontend/.env`: `VITE_API_URL=http://localhost:5000/api/v1`
-- `backend/.env`: `PORT=5000`, `NODE_ENV=development`, `MONGO_URI=mongodb://localhost:27017/sketchflow`
+Ensure required environment variables are set:
+- `frontend/.env`:
+  - `VITE_API_URL=http://localhost:5000/api/v1`
+- `backend/.env`:
+  - `PORT=5000`
+  - `NODE_ENV=development`
+  - `MONGO_URI=mongodb://localhost:27017/sketchflow`
 
 ---
 
@@ -95,24 +151,45 @@ Ensure environment variables are configured:
 ### Frontend
 ```bash
 cd frontend
-npm run dev     # Start development server
-npm run build   # Compile TypeScript & build bundle
-npm run preview # Preview production build
+npm run dev     # Start Vite development server
+npm run build   # Compile TypeScript & build production bundle
+npm run preview # Preview production build locally
 ```
 
 ### Backend
 ```bash
 cd backend
-npm run dev     # Start backend with hot reload
+npm run dev     # Start Express server with ts-node-dev hot reload
 npm run build   # Compile TypeScript to dist/
-npm start       # Run compiled production server
+npm start       # Run compiled production server from dist/index.js
 ```
 
 ---
 
-## Current Development Status
+## Project Roadmap
 
-- **Status**: Production Foundation Initialized
-- Clean layered architecture established for both frontend and backend.
-- End-to-end TypeScript strict mode enabled with path alias (`@/`) support.
-- Centralized Zod environment validation, Request ID tracking, and global error handling configured.
+- [x] Production Foundation & Layered Architecture
+- [x] Product Landing Page
+- [x] User Registration
+- [ ] User Login
+- [ ] JWT Authentication & Protected Route Guards
+- [ ] Dashboard View
+- [ ] Board Management
+- [ ] Infinite Canvas Whiteboard
+
+---
+
+## Changelog
+
+### v0.2
+- Added product Landing Page with CSS/HTML Mock Whiteboard and feature highlights.
+- Added Mongoose `User` model with lowercase/unique email and hidden password field (`select: false`).
+- Added user registration endpoint (`POST /api/v1/auth/register`).
+- Added Zod input validation for registration payload.
+- Added bcrypt password hashing.
+- Added `409 Conflict` duplicate email error handling and MongoDB `E11000` key safety.
+- Added dark mode Registration UI page with form state handling and redirect UX.
+
+### v0.1
+- Initialized project foundation with React, Vite, Express, TypeScript, and Mongoose.
+- Configured path aliases (`@/`), centralized Zod environment validation, Request ID middleware, and global error handling.
