@@ -1,13 +1,16 @@
 import React from 'react';
-import { Hero, MockBoard, Features, CTASection, Footer } from '@/components/landing';
+import { GlobalBackground } from '@/components/ui';
+import { Hero, InteractiveLandingCanvas, Features, CTASection, Footer } from '@/components/landing';
 
 export const Landing: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
-      {/* Note: Navbar is rendered via MainLayout header */}
-      <main className="flex-1">
+    <div className="relative min-h-screen bg-[#050505] text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
+      {/* 4-Layer Background Stack: Aurora Background -> Engineering Grid -> Content -> Floating UI */}
+      <GlobalBackground />
+
+      <main className="relative z-10 flex-1">
         <Hero />
-        <MockBoard />
+        <InteractiveLandingCanvas />
         <Features />
         <CTASection />
       </main>
